@@ -40,9 +40,9 @@ class Book(models.Model):
 class BookCopy(models.Model):
     book = models.ForeignKey(Book)
     copy_number = models.IntegerField()
-    borrow_date = models.DateField()
-    return_date = models.DateField()
-    actual_return_date = models.DateField()
+
+    def __str__(self):
+        return str(self.copy_number)+" "+str(self.book)
 
 
 class Student(models.Model):
@@ -55,8 +55,21 @@ class Student(models.Model):
         return self.first_name + " " + self.last_name
 
 
+class BurrowedBook(models.Model):
+    book_copy = models.OneToOneField(BookCopy)
+    borrow_date = models.DateField()
+    return_date = models.DateField()
+    actual_return_date = models.DateField()
+
+    def __str__(self):
+        return str(self.book_copy)+" "+str(self.borrow_date)
+
+
 class Burrower(models.Model):
     student = models.OneToOneField(Student)
-    books = models.ManyToManyField(BookCopy)
     fine = models.DecimalField(max_digits=5, decimal_places=2)
+    burrowed_books = models.ManyToManyField(BurrowedBook)
+
+    def __str__(self):
+        return str(self.student)
 
